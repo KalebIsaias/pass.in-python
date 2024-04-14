@@ -9,3 +9,11 @@ class Events(Base):
   details = Column(String)
   slug = Column(String, nullable=False)
   maximum_attendees = Column(Integer)
+
+  def __repr__(self):
+    return "Events [id='{}', title='{}', slug='{}', maximum_attendees='{}']".format(
+      self.id,
+      self.title,
+      self.slug,
+      self.maximum_attendees
+    )
