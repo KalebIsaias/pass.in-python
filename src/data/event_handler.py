@@ -13,6 +13,28 @@ class EventHandler:
     self.__events_repository.insert_event(body)
 
     return HttpResponse(
-      status_code=200,
-      body={ "eventId": body['uuid'] }
+      body = { "eventId": body['uuid'] },
+      status_code = 200,
+    )
+  
+  def find_by_id(self, http_request: HttpRequest) -> HttpResponse:
+    event_id = http_request.param['event_id']
+    event = self.__events_repository.get_event_by_id(event_id)
+
+    if not event: raise Exception("Event not found!")
+
+    event_attendees_count = self.__events_repository.count_events_attendees(event_id)
+
+    return HttpResponse(
+      body = {
+        "event": {
+          "id": event.id,
+          "title": event.title,
+          "details": event.details,
+          "slug": event.slug,
+          "maximum_attendees": event.maximum_attendees,
+          "attendeesAmount": event_attendees_count["attendees_count"]
+        }
+      },
+      status_code = 200,
     )
